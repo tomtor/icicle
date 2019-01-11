@@ -23,7 +23,7 @@ ASFLAGS  = -march=rv32i -mabi=ilp32
 LD       = $(TARGET)-gcc
 LDFLAGS  = $(CFLAGS) -Wl,-Tprogmem.lds
 CC       = $(TARGET)-gcc
-CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -Os -ffreestanding -nostartfiles -g -I../zlib
+CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -Os -ffreestanding -nostartfiles -I../zlib
 OBJCOPY  = $(TARGET)-objcopy
 
 include boards/$(BOARD).mk
@@ -44,6 +44,7 @@ progmem.hex: progmem.bin
 
 progmem: progmem.o start.o progmem.lds zlexample.o
 	$(LD) $(LDFLAGS) -o $@ progmem.o start.o # zlexample.o ../zlib/libz.a
+	size progmem
 
 $(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv
 	yosys $(QUIET) $<

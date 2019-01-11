@@ -1,4 +1,5 @@
 #include <stdint.h>
+#include <stdio.h>
 
 #define LEDS        *((volatile uint32_t *) 0x00010000)
 #define UART_BAUD   *((volatile uint32_t *) 0x00020000)
@@ -35,7 +36,10 @@ int main() {
     LEDS = 0xAA;
 
     for (;;) {
-        uart_puts("Hello, world!\r\n");
+	char s[80];
+        uint32_t cycle = rdcycle();
+	sprintf(s, "Cycle: %lu %ld (/19)\r\n", cycle, cycle/19);
+        uart_puts(s);
 
         uint32_t start = rdcycle();
         while ((rdcycle() - start) <= FREQ);
