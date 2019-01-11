@@ -15,14 +15,15 @@ BIN      = $(TOP).bin
 SVF      = $(TOP).svf
 TIME_RPT = $(TOP).rpt
 STAT     = $(TOP).stat
-BOARD   ?= ice40hx8k-b-evn
+#BOARD   ?= ice40hx8k-b-evn
+BOARD   ?= upduino
 TARGET   = riscv64-unknown-elf
 AS       = $(TARGET)-as
 ASFLAGS  = -march=rv32i -mabi=ilp32
 LD       = $(TARGET)-gcc
 LDFLAGS  = $(CFLAGS) -Wl,-Tprogmem.lds
 CC       = $(TARGET)-gcc
-CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -Os -ffreestanding -nostartfiles -g
+CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -Os -ffreestanding -nostartfiles -g -I../zlib
 OBJCOPY  = $(TARGET)-objcopy
 
 include boards/$(BOARD).mk
@@ -41,8 +42,8 @@ progmem.bin: progmem
 progmem.hex: progmem.bin
 	xxd -p -c 4 < $< > $@
 
-progmem: progmem.o start.o progmem.lds
-	$(LD) $(LDFLAGS) -o $@ progmem.o start.o
+progmem: progmem.o start.o progmem.lds zlexample.o
+	$(LD) $(LDFLAGS) -o $@ progmem.o start.o # zlexample.o ../zlib/libz.a
 
 $(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv
 	yosys $(QUIET) $<
