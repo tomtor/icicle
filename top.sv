@@ -36,12 +36,12 @@ module top (
 );
 
 `ifdef INTERNAL_OSC
-    logic clk;
+    logic pll_clk;
 
     SB_HFOSC inthosc (
         .CLKHFPU(1'b1),
         .CLKHFEN(1'b1),
-        .CLKHF(clk)
+        .CLKHF(pll_clk)
     );
 `endif
 
@@ -75,6 +75,7 @@ module top (
 `endif
 `endif
 
+`ifndef INTERNAL_OSC
     logic pll_clk;
     logic pll_locked_async;
 
@@ -85,6 +86,10 @@ module top (
     );
 
     logic pll_locked;
+`else
+    logic pll_locked;
+    initial pll_locked <= 1;
+`endif
     logic reset;
 
     logic [3:0] reset_count;
@@ -106,11 +111,13 @@ module top (
         end
     end
 
+`ifndef INTERNAL_OSC
     sync sync (
         .clk(pll_clk),
         .in(pll_locked_async),
         .out(pll_locked)
     );
+`endif
 
     /* instruction memory bus */
     logic [31:0] instr_address;
