@@ -1,12 +1,21 @@
 PNR     ?= nextpnr
 PCF      = boards/$(BOARD).pcf
+ifeq ($(BOARD),upduino)
+FREQ_PLL = 12
+else
 FREQ_PLL = 24
+endif
 
 progmem_syn.hex:
 	icebram -g 32 2048 > $@
 
 $(PLL):
+ifeq ($(BOARD),upduino)
+	echo "No PLL for upduino"
+	touch pll.sv
+else
 	icepll $(QUIET) -i $(FREQ_OSC) -o $(FREQ_PLL) -m -f $@
+endif
 
 ifeq ($(PNR),arachne-pnr)
 $(ASC_SYN): $(BLIF) $(PCF)
