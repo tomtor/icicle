@@ -41,8 +41,9 @@ int main() {
 	sprintf(s, "Cycle: %lu %ld (/19)\r\n", cycle, cycle/19);
         uart_puts(s);
 
+	extern int exmain();
 	int retval = exmain();
-	sprintf("zlib test: %d\r\r", retval);	
+	sprintf(s, "zlib test: %d\r\r", retval);	
 
         uint32_t start = rdcycle();
         while ((rdcycle() - start) <= FREQ);
