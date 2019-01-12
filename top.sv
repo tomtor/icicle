@@ -88,7 +88,8 @@ module top (
     logic pll_locked;
 `else
     logic pll_locked;
-    initial pll_locked <= 1;
+     initial pll_locked <= 1;
+    /* assign pll_locked = 1; */
 `endif
     logic reset;
 

@@ -43,7 +43,7 @@ progmem.hex: progmem.bin
 	xxd -p -c 4 < $< > $@
 
 progmem: progmem.o start.o progmem.lds zlexample.o
-	$(LD) $(LDFLAGS) -o $@ progmem.o start.o # zlexample.o ../zlib/libz.a
+	$(LD) $(LDFLAGS) -o $@ progmem.o start.o zlexample.o ../zlib/libz.a
 	size progmem
 
 $(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv
