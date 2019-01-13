@@ -39,7 +39,7 @@ module ram (
 	.MASKWREN({write_mask_in[3], write_mask_in[3], write_mask_in[2], write_mask_in[2]}),
 	.WREN(write_mask_in[2] | write_mask_in[3]),
 
-	.CHIPSELECT(sel_in & !reset),
+	.CHIPSELECT(sel_in && !reset),
 	.CLOCK(clk),
 
 	.STANDBY(1'b0),
