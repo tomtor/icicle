@@ -33,7 +33,9 @@ include arch/$(ARCH).mk
 all: $(BIN)
 
 clean:
-	$(RM) $(BLIF) $(JSON) $(ASC_SYN) $(ASC) $(BIN) $(SVF) $(PLL) $(TIME_RPT) $(STAT) progmem_syn.hex progmem.hex progmem.bin progmem.o start.o start.s progmem progmem.lds defines.sv
+	$(RM) $(BLIF) $(JSON) $(ASC_SYN) $(ASC) $(BIN) $(SVF) $(PLL) $(TIME_RPT) $(STAT) \
+	       	progmem_syn.hex progmem.hex progmem.bin progmem.o \
+	       	start.o start.s progmem progmem.lds defines.sv start-flash64.s
 
 progmem.bin: progmem
 	$(OBJCOPY) -O binary $< $@
@@ -52,6 +54,9 @@ syntax: $(SRC) progmem_syn.hex defines.sv
 
 defines.sv: boards/$(BOARD)-defines.sv
 	cp boards/$(BOARD)-defines.sv defines.sv
+
+start-flash64.s: start-flash.s
+	cp $< $@
 
 start.s: start-$(PROGMEM).s
 	cp $< $@

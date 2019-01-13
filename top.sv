@@ -2,7 +2,12 @@
 `include "bus_arbiter.sv"
 `include "flash.sv"
 `include "pll.sv"
+`ifdef RAM64K
+`include "ram64k.sv"
+`else
 `include "ram.sv"
+`endif
+`include "ram64k.sv"
 `include "rv32.sv"
 `include "sync.sv"
 `include "timer.sv"
