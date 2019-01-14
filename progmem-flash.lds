@@ -1,7 +1,7 @@
 ENTRY(start)
 
 MEMORY {
-    bram (rwx) : ORIGIN = 0x00000000, LENGTH = 8K
+    bram (rwx) : ORIGIN = 0x10000000, LENGTH = 8K
     flash (rx) : ORIGIN = 0x01100000, LENGTH = 3M
 }
 

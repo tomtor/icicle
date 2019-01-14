@@ -1,7 +1,7 @@
 ENTRY(start)
 
 MEMORY {
-    bram (rwx) : ORIGIN = 0x00000000, LENGTH = 8K
+    bram (rwx) : ORIGIN = 0x10000000, LENGTH = 8K
 }
 
 SECTIONS {
@@ -11,9 +11,11 @@ SECTIONS {
         *(.text.*);
     } > bram
 
-    .data : {
+    .data : ALIGN(4) {
         *(.data);
         *(.data.*);
+
+	. = ALIGN(4);
     } > bram
 
     .rodata : {

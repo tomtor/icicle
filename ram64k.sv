@@ -17,6 +17,7 @@ module ram (
     logic [31:0] read_value;
     logic ready;
 
+`ifdef ICE40
     SB_SPRAM256KA ram_low( // bits[15:0]
 	.DATAOUT(read_value[15:0]),
 	.ADDRESS(address_in[15:2]),
@@ -46,6 +47,9 @@ module ram (
 	.SLEEP(1'b0),
 	.POWEROFF(1'b1)
     );
+`elsif ECP5
+// TODO
+`endif
 
 
     assign read_value_out = sel_in ? read_value : 0;
