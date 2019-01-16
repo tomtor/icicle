@@ -47,8 +47,6 @@ module ram (
 	.SLEEP(1'b0),
 	.POWEROFF(1'b1)
     );
-`elsif ECP5
-// TODO
 `endif
 
 

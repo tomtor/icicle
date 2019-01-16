@@ -16,7 +16,7 @@
 `ifdef SPI_FLASH
 `define RESET_VECTOR 32'h01100000
 `else
-`define RESET_VECTOR 32'h00000000
+`define RESET_VECTOR 32'h10000000
 `endif
 
 module top (

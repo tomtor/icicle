@@ -13,7 +13,11 @@ module ram (
     input [31:0] write_value_in,
     output logic ready_out
 );
+`ifdef ECP5
+    logic [31:0] mem [16383:0];
+`else
     logic [31:0] mem [2047:0];
+`endif
     logic [31:0] read_value;
     logic ready;
 
