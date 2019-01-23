@@ -6,3 +6,4 @@ BASECFG  = lfe5um5g-85f
 FREQ_OSC = 12
 PROGMEM  = ram64
 # PROGMEM  = ram
+# PROGMEM  = flash64

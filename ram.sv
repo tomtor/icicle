@@ -15,6 +15,8 @@ module ram (
 );
 `ifdef ECP5
     logic [31:0] mem [16383:0];
+    // logic [31:0] mem [32767:0];
+    // logic [31:0] mem [2047:0];
 `else
     logic [31:0] mem [2047:0];
 `endif
@@ -28,6 +30,7 @@ module ram (
 `elsif ECP5
     initial
         $readmemh("progmem.hex", mem);
+        // $readmemh("datafile_syn.hex", mem);
 `endif
 `endif
 

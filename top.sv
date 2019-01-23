@@ -14,7 +14,11 @@
 `include "uart.sv"
 
 `ifdef SPI_FLASH
+`ifdef ECP5
+`define RESET_VECTOR 32'h01800000
+`else
 `define RESET_VECTOR 32'h01100000
+`endif
 `else
 `define RESET_VECTOR 32'h10000000
 `endif
@@ -68,7 +72,7 @@ module top (
         .D_IN_0({flash_io1_in, flash_io0_in}),
         .D_OUT_0({flash_io1_out, flash_io0_out})
     );
-`elsif ECP5
+`elsif XECP5
     TRELLIS_IO #(
         .DIR("BIDIR")
     ) flash_io [1:0] (
@@ -234,7 +238,7 @@ module top (
             32'b00000000_00000010_00000000_0000????: uart_sel = 1;
             32'b00000000_00000011_00000000_0000????: timer_sel = 1;
             32'b00000001_????????_????????_????????: flash_sel = 1;
-            32'b00010000_00000000_????????_????????: ram_sel = 1;
+            32'b00010000_????????_????????_????????: ram_sel = 1;
             default:                                 mem_fault = 1;
         endcase
     end

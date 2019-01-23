@@ -15,8 +15,11 @@ BIN      = $(TOP).bin
 SVF      = $(TOP).svf
 TIME_RPT = $(TOP).rpt
 STAT     = $(TOP).stat
-BOARD   ?= ice40hx8k-b-evn
-TARGET   = riscv64-unknown-elf
+#BOARD   ?= ice40hx8k-b-evn
+BOARD    ?= ecp5-evn
+#TARGET   = riscv64-unknown-elf
+#TARGET   = /opt/riscv32imc/bin/riscv32-unknown-elf
+TARGET   = /opt/riscv32i/bin/riscv32-unknown-elf
 AS       = $(TARGET)-as
 ASFLAGS  = -march=rv32i -mabi=ilp32
 LD       = $(TARGET)-gcc
@@ -36,7 +39,11 @@ clean:
 	$(RM) $(BLIF) $(JSON) $(ASC_SYN) $(ASC) $(BIN) $(SVF) $(PLL) $(TIME_RPT) $(STAT) \
 	       	progmem_syn.hex progmem.hex progmem.bin progmem.o \
 	       	start.o start.s progmem progmem.lds defines.sv \
-	       	start-flash64.s start-ram64.s
+	       	start-flash64.s start-ram64.s datafile_syn.hex
+
+datafile_syn.hex:
+	#icebram -g 32 16384 > $@
+	icebram -g 32 2048 > $@
 
 progmem.bin: progmem
 	$(OBJCOPY) -O binary $< $@
@@ -45,9 +52,10 @@ progmem.hex: progmem.bin
 	xxd -p -c 4 < $< > $@
 
 progmem: progmem.o start.o progmem.lds
-	$(LD) $(LDFLAGS) -o $@ progmem.o start.o
+	$(LD) $(LDFLAGS) -o $@ progmem.o start.o -lm
 
-$(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv
+$(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv datafile_syn.hex
+# $(BLIF) $(JSON): $(YS) $(SRC) defines.sv datafile_syn.hex
 	yosys $(QUIET) $<
 
 syntax: $(SRC) progmem_syn.hex defines.sv

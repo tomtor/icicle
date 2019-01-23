@@ -1,5 +1,6 @@
 #include <stdint.h>
 #include <stdlib.h>
+#include <math.h>
 
 #define LEDS        *((volatile uint32_t *) 0x00010000)
 #define UART_BAUD   *((volatile uint32_t *) 0x00020000)
@@ -11,7 +12,8 @@
 #define UART_STATUS_TX_READY 0x1
 #define UART_STATUS_RX_READY 0x2
 
-#define BAUD_RATE 9600
+//#define BAUD_RATE 9600
+#define BAUD_RATE 115200
 
 static void uart_putc(char c) {
     while (!(UART_STATUS & UART_STATUS_TX_READY));
@@ -43,6 +45,7 @@ int main() {
 
     uart_puts("Hello, world!\r\n");
 
+    int count = 0;
     for (;;) {
 	char s[20];
 
@@ -57,7 +60,12 @@ int main() {
         uint32_t start = rdcycle();
         uint32_t starti = rdinstret();
 
-        while ((rdcycle() - start) <= FREQ);
+        double f = 0;
+        double g = 0;
+        while ((rdcycle() - start) <= FREQ / 4) {
+		f += 0.001;
+		g += sqrt(3);
+	}
 
         uint32_t ncycle = rdcycle() - start;
         uint32_t ninstret = rdinstret() - starti;
@@ -69,9 +77,35 @@ int main() {
 	uart_puts(s);
 	uart_puts(" instructions\r\n");
 
-        LEDS = ~LEDS;
+	itoa((int)f, s, 10);
+	uart_puts(s);
+	uart_puts("\r\n");
+
+	itoa((int)g + count, s, 10);
+	uart_puts(s);
+	uart_puts("\r\n");
+
+	itoa((int)(1000000 * sqrt(2)), s, 10);
+	uart_puts(s);
+	uart_puts("\r\n");
+
+#if 0
+	char *p = malloc(10);
+	uart_puts("malloc\r\n");
+	free(p);
+	uart_puts("free\r\n");
+	sprintf(s, "Hi sprintf\r\n");
+	uart_puts(s);
+
+	//sprintf(s, "%lf\r\n", 1.0 / sum);
+	//gcvt(1.0 / sum, 15, s);
+	//uart_puts(s);
+	//uart_puts("\r\n");
+#endif
+
+        LEDS = ~ ++count;
 
         starti = rdinstret();
-        while ((rdcycle() - start) <= FREQ);
+        while ((rdcycle() - start) <= FREQ / 4);
     }
 }
