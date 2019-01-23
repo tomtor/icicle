@@ -57,6 +57,15 @@ int main() {
         uart_puts(s);
         uart_puts("\r\n");
 
+#if 0
+	for (int i= 0; i < 8; i++) {
+          itoa(*(char*) (0x01800000 + i), s, 16);
+          uart_puts(s);
+          uart_puts(" ");
+	}
+        uart_puts("\r\n");
+#endif
+
         uint32_t start = rdcycle();
         uint32_t starti = rdinstret();
 

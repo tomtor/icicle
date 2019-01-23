@@ -25,7 +25,7 @@ ASFLAGS  = -march=rv32i -mabi=ilp32
 LD       = $(TARGET)-gcc
 LDFLAGS  = $(CFLAGS) -Wl,-Tprogmem.lds
 CC       = $(TARGET)-gcc
-CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -Os -ffreestanding -nostartfiles -g
+CFLAGS   = -march=rv32i -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -DTIME -DCORE_HZ=$(FREQ_PLL)000000ll -Os -ffreestanding -nostartfiles -g
 OBJCOPY  = $(TARGET)-objcopy
 
 include boards/$(BOARD).mk
@@ -39,7 +39,8 @@ clean:
 	$(RM) $(BLIF) $(JSON) $(ASC_SYN) $(ASC) $(BIN) $(SVF) $(PLL) $(TIME_RPT) $(STAT) \
 	       	progmem_syn.hex progmem.hex progmem.bin progmem.o \
 	       	start.o start.s progmem progmem.lds defines.sv \
-	       	start-flash64.s start-ram64.s datafile_syn.hex
+	       	start-flash64.s start-ram64.s datafile_syn.hex \
+		dhrystone.o dhrystone_main.o stdlib.o
 
 datafile_syn.hex:
 	#icebram -g 32 16384 > $@
@@ -51,8 +52,9 @@ progmem.bin: progmem
 progmem.hex: progmem.bin
 	xxd -p -c 4 < $< > $@
 
-progmem: progmem.o start.o progmem.lds
-	$(LD) $(LDFLAGS) -o $@ progmem.o start.o -lm
+progmem: progmem.o start.o progmem.lds dhrystone.o dhrystone_main.o stdlib.o
+	#$(LD) $(LDFLAGS) -o $@ progmem.o start.o -lm
+	$(LD) $(LDFLAGS) -o $@ dhrystone.o dhrystone_main.o stdlib.o start.o
 
 $(BLIF) $(JSON): $(YS) $(SRC) progmem_syn.hex progmem.hex defines.sv datafile_syn.hex
 # $(BLIF) $(JSON): $(YS) $(SRC) defines.sv datafile_syn.hex
