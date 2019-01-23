@@ -29,6 +29,11 @@ module top (
 
     /* LEDs */
     output logic [7:0] leds,
+`ifdef INTERNAL_OSC
+    output logic LED_R,
+    output logic LED_G,
+    output logic LED_B,
+`endif
 
     /* UART */
     input uart_rx,
@@ -36,6 +41,22 @@ module top (
 );
 
 `ifdef INTERNAL_OSC
+   SB_RGBA_DRV #(
+    .CURRENT_MODE("0b1"),
+    .RGB0_CURRENT("0b000001"),
+    .RGB1_CURRENT("0b000001"),
+    .RGB2_CURRENT("0b000001")
+   ) rgb (
+	.RGBLEDEN (1'b1),
+	.RGB0PWM  (leds[0]),
+	.RGB1PWM  (leds[1]),
+	.RGB2PWM  (leds[2]),
+	.CURREN   (1'b1),
+	.RGB0     (LED_R),
+	.RGB1     (LED_G),
+	.RGB2     (LED_B)
+    );
+
     logic pll_clk;
 
     SB_HFOSC inthosc (

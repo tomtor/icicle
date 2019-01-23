@@ -4,6 +4,9 @@ set_io flash_clk 15
 set_io flash_csn 16
 set_io flash_io0 17
 set_io flash_io1 14
+set_io LED_R     41
+set_io LED_G     40
+set_io LED_B     39
 set_io leds[0]   38
 set_io leds[1]   42
 set_io leds[2]   36
