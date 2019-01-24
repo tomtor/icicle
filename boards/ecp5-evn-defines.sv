@@ -1,2 +1,2 @@
 // Defines for ECP5 evaluation board
-// `define SPI_FLASH
+`define SPI_FLASH

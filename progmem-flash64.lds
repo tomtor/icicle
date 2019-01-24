@@ -1,8 +1,8 @@
 ENTRY(start)
 
 MEMORY {
-    spram (rwx) : ORIGIN = 0x10000000, LENGTH = 128K
-    flash (rx) : ORIGIN = 0x01100000, LENGTH = 3M
+    spram (rwx) : ORIGIN = 0x10000000, LENGTH = 64K
+    flash (rx) : ORIGIN = 0x01800000, LENGTH = 8M
 }
 
 SECTIONS {

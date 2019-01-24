@@ -32,12 +32,17 @@ module top (
     /* serial flash */
     output logic flash_clk,
     output logic flash_csn,
+`ifndef ECP5
     inout flash_io0,
     inout flash_io1,
+`else
+    output flash_io0,
+    input flash_io1,
+`endif
 `endif
 
     /* LEDs */
-    output logic [7:0] leds,
+    output logic [7:0] dleds,
 `ifdef INTERNAL_OSC
     output logic LED_R,
     output logic LED_G,
@@ -48,6 +53,11 @@ module top (
     input uart_rx,
     output logic uart_tx
 );
+
+    assign dleds[0] = !flash_csn;
+    assign dleds[1] = !flash_io0;
+    assign dleds[2] = !flash_io1;
+    logic [7:0] leds;
 
 `ifdef INTERNAL_OSC
    SB_RGBA_DRV #(
@@ -93,7 +103,7 @@ module top (
         .D_IN_0({flash_io1_in, flash_io0_in}),
         .D_OUT_0({flash_io1_out, flash_io0_out})
     );
-`elsif XECP5
+`elsif WAS_ECP5
     TRELLIS_IO #(
         .DIR("BIDIR")
     ) flash_io [1:0] (
