@@ -16,6 +16,11 @@
 `ifdef SPI_FLASH
 `ifdef ECP5
 `define RESET_VECTOR 32'h01800000
+
+module USRMCLK (USRMCLKI, USRMCLKTS);
+    input USRMCLKI, USRMCLKTS;
+endmodule
+
 `else
 `define RESET_VECTOR 32'h01100000
 `endif
@@ -369,6 +374,13 @@ module top (
         .write_value_in(mem_write_value),
         .ready_out(flash_ready)
     );
+
+`ifdef ECP5
+    USRMCLK usrmclk_inst (
+	        .USRMCLKI(pll_clk),
+		.USRMCLKTS(flash_csn)
+    ) /* synthesis syn_noprune=1 */;
+`endif
 `else
     assign flash_read_value = 0;
     assign flash_ready = flash_sel;
